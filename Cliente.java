@@ -35,7 +35,7 @@ private JTextField txtNome;
 
 public Cliente() throws IOException{                  
     JLabel lblMessage = new JLabel("Verificar!");
-    txtIP = new JTextField("10.106.6.88");
+    txtIP = new JTextField("10.106.6.87");
     txtPorta = new JTextField("12345");
     txtNome = new JTextField("Cliente");                
     Object[] texts = {lblMessage, txtIP, txtPorta, txtNome };  
