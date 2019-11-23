@@ -35,7 +35,7 @@ private JTextField txtNome;
 
 public Cliente() throws IOException{                  
     JLabel lblMessage = new JLabel("Verificar!");
-    txtIP = new JTextField("10.106.6.87");
+    txtIP = new JTextField("localhost");
     txtPorta = new JTextField("12345");
     txtNome = new JTextField("Cliente");                
     Object[] texts = {lblMessage, txtIP, txtPorta, txtNome };  
@@ -97,11 +97,15 @@ public Cliente() throws IOException{
   public void enviarMensagem(String msg) throws IOException{
                            
     if(msg.equals("Sair")){
-      bfw.write("Desconectado \r\n");
-      texto.append("Desconectado \r\n");
+      bfw.write("Sair\r");
+    //   bfw.close();
+    // ouw.close();
+    // ou.close();
+    // socket.close();
+      //texto.append("Desconectado \r\n");
     }else{
       bfw.write(msg+"\r\n");
-      texto.append( txtNome.getText() + " diz -> " +         txtMsg.getText()+"\r\n");
+      //texto.append( txtNome.getText() + " diz -> " +         txtMsg.getText()+"\r\n");
     }
      bfw.flush();
      txtMsg.setText("");        
@@ -124,9 +128,15 @@ public void escutar() throws IOException{
           msg = bfr.readLine();
         if(msg.equals("Sair"))
           texto.append("Servidor caiu! \r\n");
+          
          else
           texto.append(msg+"\r\n");         
          }
+
+    bfw.close();
+    ouw.close();
+    ou.close();
+    socket.close();
  }
 
  /***
@@ -136,10 +146,10 @@ public void escutar() throws IOException{
   public void sair() throws IOException{
                           
     enviarMensagem("Sair");
-    bfw.close();
-    ouw.close();
-    ou.close();
-    socket.close();
+    //bfw.close();
+    //ouw.close();
+    //ou.close();
+    //socket.close();
  }
 
  @Override

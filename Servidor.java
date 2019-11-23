@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import java.util.Calendar;
+import java.text.SimpleDateFormat;
 
 public class Servidor extends Thread {
 
@@ -51,18 +53,28 @@ public void run(){
       BufferedWriter bfw = new BufferedWriter(ouw); 
       clientes.add(bfw);
       nome = msg = bfr.readLine();
-                 
+      System.out.println(nome);
+      getCurrentTime();
+      sendToAllServer(null, getCurrentTime()+"... "+msg+" entrou no chat!");
+      //System.out.println(clientes);     
       while(!"Sair".equalsIgnoreCase(msg) && msg != null)
         {           
          msg = bfr.readLine();
          sendToAll(bfw, msg);
          System.out.println(msg);                                              
-         }
-                                        
+         }  
+         sendToAllServer(null, getCurrentTime()+"... "+nome+" saiu do chat!");
+
+         clientes.remove(bfw);
+                                      
      }catch (Exception e) {
        e.printStackTrace();
+       
       
-     }                       
+     }   
+     //System.out.println(clientes);
+     
+                      
   }
 
   /***
@@ -77,11 +89,32 @@ public void sendToAll(BufferedWriter bwSaida, String msg) throws  IOException
     
   for(BufferedWriter bw : clientes){
    bwS = (BufferedWriter)bw;
-   if(!(bwSaida == bwS)){
-     bw.write(nome + " -> " + msg+"\r\n");
-     bw.flush(); 
+   if(!("Sair".equalsIgnoreCase(msg)&& (bwSaida == bwS))){
+    bw.write("("+getCurrentTime()+") "+nome + "\n   -> " + msg+"\r\n");
+    bw.flush(); 
    }
+
+   //if(!(bwSaida == bwS)){
+     
+   //}
   }          
+}
+
+public void sendToAllServer(BufferedWriter bwSaida, String msg) throws  IOException 
+{
+
+    for(BufferedWriter bw : clientes){
+        bw.write(msg+"\n");
+        bw.flush(); 
+      }
+      
+}
+//retornar data
+public String getCurrentTime(){
+  Calendar calendar = Calendar.getInstance(); // gets current instance of the calendar  SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+  SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+  System.out.println(formatter.format(calendar.getTime()));
+  return ""+formatter.format(calendar.getTime());
 }
 
 /***
@@ -92,7 +125,7 @@ public void sendToAll(BufferedWriter bwSaida, String msg) throws  IOException
     
     try{
       //Cria os objetos necessário para instânciar o servidor
-      JLabel lblMessage = new JLabel("Porta do Servidor:");
+      JLabel lblMessage = new JLabel("localhost");
       JTextField txtPorta = new JTextField("12345");
       Object[] texts = {lblMessage, txtPorta };  
       JOptionPane.showMessageDialog(null, texts);
